@@ -32,37 +32,58 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  const listPromise = new Promise((resolve, reject) => {
-      resolve(JSON.stringify(books));
-  });
-  listPromise.then((result) => {
-    return res.status(200).json(result);
-  });
+    const listPromise = new Promise((resolve, reject) => {
+        resolve(JSON.stringify(books));
+    });
+    listPromise.then((result) => {
+        return res.status(200).json(result);
+    });
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  return res.status(200).json(books[req.params.isbn]);
- });
+    const detailPromise = new Promise((resolve, reject) => {
+        resolve(books[req.params.isbn]);
+    });
+    detailPromise.then((result) => {
+        return res.status(200).json(result);
+    });
+});
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  const book = Object.values(books).find((book) => book.author === req.params.author)
-  if (book) {
-      res.status(200).json(book);
-  } else {
-    return res.status(200).json({});
-  }
+    const detailPromise = new Promise((resolve, reject) => {
+        const book = Object.values(books).find((book) => book.author === req.params.author);
+        if (book) {
+            resolve(book);
+        } else {
+            reject("cannot find book")
+        }
+    });
+
+    detailPromise.then((result) => {
+        res.status(200).json(result);
+    }, () => {
+        res.status(200).json({});
+    });
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-    const book = Object.values(books).find((book) => book.title === req.params.title)
-    if (book) {
-        res.status(200).json(book);
-    } else {
-      return res.status(200).json({});
-    }
+    const detailPromise = new Promise((resolve, reject) => {
+        const book = Object.values(books).find((book) => book.title === req.params.title);
+        if (book) {
+            resolve(book);
+        } else {
+            reject("cannot find book")
+        }
+    });
+
+    detailPromise.then((result) => {
+        res.status(200).json(result);
+    }, () => {
+        res.status(200).json({});
+    });
 });
 
 //  Get book review
